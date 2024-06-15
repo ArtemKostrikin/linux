@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Проверяем, что передан аргумент - путь к директории
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <directory_path>"
+    exit 1
+fi
+
+directory="$1"
+
+# Проверяем существование директории
+if [ ! -d "$directory" ]; then
+    echo "Error: Directory '$directory' not found."
+    exit 1
+fi
+
+# Удаляем файлы с расширениями .bak, .tmp, .backup
+find "$directory" -type f \( -name "*.bak" -o -name "*.tmp" -o -name "*.backup" \) -delete
+
+echo "Cleanup complete."

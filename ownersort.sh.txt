@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Проверяем, что передан аргумент - путь к исходной директории
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <source_directory>"
+    exit 1
+fi
+
+source_directory="$1"
+
+# Проверяем существование исходной директории
+if [ ! -d "$source_directory" ]; then
+    echo "Error: Directory '$source_directory' not found."
+    exit 1
+fi
+
+# Получаем список файлов в исходной директории
+files=$(find "$source_directory" -type f)
+
+# Цикл по каждому файлу
+for file in $files; do
+    # Получаем владельца файла
+    owner=$(stat -c '%U' "$file")
+
+    # Создаем директорию с именем владельца, если её еще нет
+    if [ ! -d "$owner" ]; then
+        mkdir "$owner"
+    fi
+
+    # Копируем файл в директорию владельца
+    cp "$file" "$owner/"
+done
+
+echo "Files sorted by owner in directories."
